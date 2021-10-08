@@ -1,4 +1,5 @@
 //librarias
+#include <LibPrintf.h>
 #include "HCPCA9685.h"
 #include <SPI.h>
 #include <nRF24L01.h>                                  //Inclui a libraria para comunicaçao por ondas de radio
@@ -78,7 +79,9 @@ void loop() {
     if (radio.available())  {            //Looking for the data.
       radio.read(&mydata, sizeof(mydata));    //Reading the data
       tempoanterior1 = tempo1;
-          if (mydata.steer < 124 || mydata.steer > 175 || mydata.velocity > 183 || mydata.velocity < 117 ) {
+    }
+
+    if (mydata.steer < 124 || mydata.steer > 175 || mydata.velocity > 183 || mydata.velocity < 117 ) {
       HCPCA9685.Servo(0, 150);
       HCPCA9685.Servo(1, 150);
     }
@@ -88,7 +91,6 @@ void loop() {
 
       //Steer
       HCPCA9685.Servo(1, mydata.steer);
-    }
     }
   }
 
@@ -134,13 +136,7 @@ void loop() {
 
 
   //Escreve no Serial para debug
-  Serial.print("  Velocity:");
-  Serial.print(mydata.velocity);
-  Serial.print("  Steer:");
-  Serial.print(mydata.steer);
-  Serial.print("  Diferença: ");
-  Serial.print(tempo1 - tempoanterior1);
-  Serial.print("  Modo:");
-  Serial.println(modo);
+  printf("Velocity: " + mydata.velocity + "  Steer: " + mydata.steer + "  Diferença: " + tempo1-tempoanterior1 + "  Modo: " + modo);
+
   delay(20);
 }
