@@ -1,24 +1,23 @@
-//librarias
-#include <LibPrintf.h>
-#include "HCPCA9685.h"
-#include <SPI.h>
-#include <nRF24L01.h>                                  //Inclui a libraria para comunicaçao por ondas de radio
-#include <RF24.h>                                      //Inclui a libraria para comunicaçao por ondas de radio
+//Librarys
+#include <LibPrintf.h>                                 //Includes the Libprintf library to use the printf function to write to serial 
+#include "HCPCA9685.h"                                 //Includes the library to use the driver for the servos
+#include <SPI.h>                                       //Required library for RF24 communication 
+#include <nRF24L01.h>                                  //Includes the library for the communication with radio waves
+#include <RF24.h>                                      //Includes the library for the communication with radio waves
 
 
 
-//Define o objeto servo e motor
+//Defines the adress of the servo driver
 #define  I2CAdd 0x40
 HCPCA9685 HCPCA9685(I2CAdd);
 
 
-//Comunicacao Radio
-const byte slaveAddress[6] = "00001";
+//RF24
+const byte slaveAddress[6] = "00001";                         //Sets the adress for communitating with the controller(must be the same in the controller)                
+RF24 radio(7, 53);                                            // CE Pin, CSN Pin
 
-RF24 radio(7, 53); // CE, CSN
 
-
-//Estrutura com a informacao recebida
+//Structure with the received information
 struct RECEIVE_DATA_STRUCTURE {
   int velocity;
   int steer;
@@ -26,75 +25,74 @@ struct RECEIVE_DATA_STRUCTURE {
   int freio;
   int alone;
 } ;
+RECEIVE_DATA_STRUCTURE mydata;                                 //Atributes a easier name to be used in the structure
 
-RECEIVE_DATA_STRUCTURE mydata;                                   //Atribui um nome mais facil de utilizar
+//General variables
+#define Baud 250000                                            //Sets the communication baudRate with the computer
+#define steerc 150                                             //Center of the wheels
+#define lightpin 46                                            //Defines the light pin
+#define motorPin 0                                              //Define the motor pin
+#define servoPin 1                                             //Define the servo pin
 
-
-//Variaveis gerais
-#define Baud 250000                                            //Atribui a baudRate para comunicar entre o arduino e o computador
-#define steerc 150                                             //Centro das rodas
-#define lightpin 46                                            //Define o pino das luzes
-
-//Variaveis
-bool rslt;                                                     //Resultado de envio de mensagem
-int light1 = 0;                                                //Luzes desligadas
-long tempoanterior = 0;                                        //Altura em que foi alterada as luzes
-long tempo = 0;                                                //Tempo que nao foi ativado o comando das luzes
-long tempoanterior1 = 0;                                       //Tempo da altura em que foi alterada
-long tempo1 = 0;
-long tempoanterior2 = 0;                                       //Time on the last command
-long tempo2 = 0;
-int modo = 0;                                                  //Define se está no modo manual ou automatico
+//Variables
+bool rslt;                                                     //Stores the result of the communication
+int light1 = 0;                                                //Lights value(0-off, 1-on)
+long tempoanterior = 0;                                        //Time the lights value was changed
+long tempo = 0;                                                //Time for the commutation of the light pin
+long tempoanterior1 = 0;                                       //Last time it was received communication
+long tempo1 = 0;                                               //Time to check if the arduino is still communicating with controller
+long tempoanterior2 = 0;                                       //Time the modo was changed
+long tempo2 = 0;                                               //Time for the commutation of the modo
+int modo = 0;                                                  //Defines if its in automatic mode or manual mode (0-manual, 1-automatic)
 
 
 
 void setup() {
-  /* Initialise the library and set it to 'servo mode' */
-  HCPCA9685.Init(SERVO_MODE);
+  //Serial communication
+  Serial.begin(Baud);                                           //Inicializes Serial comunnication with the computer for debugging
 
-  /* Wake the device up */
-  HCPCA9685.Sleep(false);                                       //Acorda o driver
-  HCPCA9685.Servo(1, steerc);                                   //Centra as Rodas
-  HCPCA9685.Servo(0, 150);                                      //Define o ponto morto do motor
-  pinMode(lightpin, OUTPUT);                                    //Inicia o pino das luzes
-  digitalWrite(lightpin, LOW);                                  //Inicializa as luzes no modo desligado
-  Serial.begin(Baud);                                           //Inicializa a comunicaçao Serial com o computador
+  //HCPCA9685
+  HCPCA9685.Init(SERVO_MODE);                                   //Initialise the library and set it to 'servo mode
+  HCPCA9685.Sleep(false);                                       //Wakes the driver
+  HCPCA9685.Servo(servoPin, steerc);                            //Center the wheels
+  HCPCA9685.Servo(motorPin, 150);                                //Defines the neutral in motor
+  pinMode(lightpin, OUTPUT);                                    //Initializes light Pin
+  digitalWrite(lightpin, LOW);                                  //Starts the lights as turnoff
 
-  //Inicia o Radio
-  radio.begin();
-  radio.openReadingPipe(0, slaveAddress);
-  radio.startListening();
+  //RF24
+  radio.begin();                                                //Starts the radio driver
+  radio.openReadingPipe(0, slaveAddress);                       //Opens a pipe to communicate(must be the same as the controller) with the controller
+  radio.startListening();                                       //Sets the RF24 driver to listening for new information
 }
 
 void loop() {
+  //Checks if the arduino is still receiving information through radio waves, if not centers the wheels and puts it in neutral
   if ((tempo1 - tempoanterior1) >= 20) {
-    HCPCA9685.Servo(0, 150);
-    HCPCA9685.Servo(1, 150);
+    HCPCA9685.Servo(motorPin, 150);                             //Velocity
+    HCPCA9685.Servo(servoPin, 150);                             //Steer
     mydata.steer = 150;
     mydata.velocity = 150;
   }
 
   else {
     //Nrf24
-    if (radio.available())  {            //Looking for the data.
-      radio.read(&mydata, sizeof(mydata));    //Reading the data
-      tempoanterior1 = tempo1;
-    }
-
-    if (mydata.steer < 124 || mydata.steer > 175 || mydata.velocity > 183 || mydata.velocity < 117 ) {
-      HCPCA9685.Servo(0, 150);
-      HCPCA9685.Servo(1, 150);
-    }
-    else {
-      //Velocity
-      HCPCA9685.Servo(0, mydata.velocity);
-
-      //Steer
-      HCPCA9685.Servo(1, mydata.steer);
+    if (radio.available())  {                                   //Looking for the data.
+      radio.read(&mydata, sizeof(mydata));                      //Reading the data
+      tempoanterior1 = tempo1;                                  //Resert the time variable
     }
   }
 
-  //luzes
+  //Checks the received information is within accepted values and then sends it to the servo driver
+if (mydata.steer < 124 || mydata.steer > 175 || mydata.velocity > 183 || mydata.velocity < 117 ) {
+      HCPCA9685.Servo(motorPin, 150);                                     //Velocity
+      HCPCA9685.Servo(servoPin, 150);                                     //Steer
+    }
+    else {
+      HCPCA9685.Servo(motorPin, mydata.velocity);                         //Velocity
+      HCPCA9685.Servo(servoPin, mydata.steer);                            //Steer
+    }
+
+  //Checks if the button was pressed recently, if not it will change its output
   if (tempo - tempoanterior >= 10) {
     if (mydata.light == 1) {
       switch (light1) {
@@ -112,7 +110,7 @@ void loop() {
     }
   }
 
-  //Comuta a variavel modo
+  //Changes the modo variable
   if (tempo2 - tempoanterior2 >= 10) {
     if (mydata.alone == 1) {
       switch (modo) {
@@ -128,15 +126,13 @@ void loop() {
     }
   }
 
-
-  //Incrementa as variaveis de tempo para futuramente trocar as respetivas variaveis
+  //Increments the time variables to check in the future if the respective variables can be changed
   tempo++;
   tempo1++;
   tempo2++;
 
+  //Writes to Serial for debbuging
+  printf("\nVelocity: " , mydata.velocity , "  Steer: " , mydata.steer , "  Diferença: " , tempo1-tempoanterior1 , "  Modo: " , modo);
 
-  //Escreve no Serial para debug
-  printf("Velocity: " + mydata.velocity + "  Steer: " + mydata.steer + "  Diferença: " + tempo1-tempoanterior1 + "  Modo: " + modo);
-
-  delay(20);
+  delay(20);                                     
 }
