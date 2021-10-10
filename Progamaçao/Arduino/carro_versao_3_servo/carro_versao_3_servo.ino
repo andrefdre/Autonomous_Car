@@ -6,7 +6,6 @@
 #include <RF24.h>                                      //Includes the library for the communication with radio waves
 
 
-
 //Defines the adress of the servo driver
 #define  I2CAdd 0x40
 HCPCA9685 HCPCA9685(I2CAdd);
@@ -22,7 +21,7 @@ struct RECEIVE_DATA_STRUCTURE {
   int velocity;
   int steer;
   int light;
-  int freio;
+  int slow;
   int alone;
 } ;
 RECEIVE_DATA_STRUCTURE mydata;                                 //Atributes a easier name to be used in the structure
@@ -37,13 +36,13 @@ RECEIVE_DATA_STRUCTURE mydata;                                 //Atributes a eas
 //Variables
 bool rslt;                                                     //Stores the result of the communication
 int light1 = 0;                                                //Lights value(0-off, 1-on)
-long tempoanterior = 0;                                        //Time the lights value was changed
-long tempo = 0;                                                //Time for the commutation of the light pin
-long tempoanterior1 = 0;                                       //Last time it was received communication
-long tempo1 = 0;                                               //Time to check if the arduino is still communicating with controller
-long tempoanterior2 = 0;                                       //Time the modo was changed
-long tempo2 = 0;                                               //Time for the commutation of the modo
-int modo = 0;                                                  //Defines if its in automatic mode or manual mode (0-manual, 1-automatic)
+long previoustime = 0;                                        //Time the lights value was changed
+long time = 0;                                                //Time for the commutation of the light pin
+long previoustime1 = 0;                                       //Last time it was received communication
+long time1 = 0;                                               //Time to check if the arduino is still communicating with controller
+long previoustime2 = 0;                                       //Time the modo was changed
+long time2 = 0;                                               //Time for the commutation of the modo
+int mode = 0;                                                  //Defines if its in automatic mode or manual mode (0-manual, 1-automatic)
 
 
 
@@ -67,7 +66,7 @@ void setup() {
 
 void loop() {
   //Checks if the arduino is still receiving information through radio waves, if not centers the wheels and puts it in neutral
-  if ((tempo1 - tempoanterior1) >= 20) {
+  if ((time1 - previoustime1) >= 20) {
     HCPCA9685.Servo(motorPin, 150);                             //Velocity
     HCPCA9685.Servo(servoPin, 150);                             //Steer
     mydata.steer = 150;
@@ -78,7 +77,7 @@ void loop() {
     //Nrf24
     if (radio.available())  {                                   //Looking for the data.
       radio.read(&mydata, sizeof(mydata));                      //Reading the data
-      tempoanterior1 = tempo1;                                  //Resert the time variable
+      previoustime1 = time1;                                  //Reset the time variable
     }
   }
 
@@ -93,46 +92,46 @@ if (mydata.steer < 124 || mydata.steer > 175 || mydata.velocity > 183 || mydata.
     }
 
   //Checks if the button was pressed recently, if not it will change its output
-  if (tempo - tempoanterior >= 10) {
+  if (time - previoustime >= 10) {
     if (mydata.light == 1) {
       switch (light1) {
         case 0:
           digitalWrite(lightpin, HIGH);
           light1 = 1;
-          tempoanterior = tempo;
+          previoustime = time;
           break;
         case 1:
           digitalWrite(lightpin, LOW);
           light1 = 0;
-          tempoanterior = tempo;
+          previoustime = time;
           break;
       }
     }
   }
 
-  //Changes the modo variable
-  if (tempo2 - tempoanterior2 >= 10) {
+  //Changes the mode variable
+  if (time2 - previoustime2 >= 10) {
     if (mydata.alone == 1) {
-      switch (modo) {
+      switch (mode) {
         case 0:
-          modo = 1;
-          tempoanterior2 = tempo2;
+          mode = 1;
+          previoustime2 = time2;
           break;
         case 1:
-          modo = 0;
-          tempoanterior2 = tempo2;
+          mode = 0;
+          previoustime2 = time2;
           break;
       }
     }
   }
 
   //Increments the time variables to check in the future if the respective variables can be changed
-  tempo++;
-  tempo1++;
-  tempo2++;
+  time++;
+  time1++;
+  time2++;
 
   //Writes to Serial for debbuging
-  printf("\nVelocity: " , mydata.velocity , "  Steer: " , mydata.steer , "  Diferença: " , tempo1-tempoanterior1 , "  Modo: " , modo);
+  printf("\nVelocity: " , mydata.velocity , "  Steer: " , mydata.steer , "  Diferença: " , time1-previoustime1 , "  Modo: " , mode);
 
   delay(20);                                     
 }
