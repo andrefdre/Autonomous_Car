@@ -37,7 +37,7 @@ This projected started in the beggining of my university and I setup myself to b
 <br />
 <div align="center">
   <a href="https://github.com/othneildrew/Best-README-Template">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
+    <img src="Images/Logo.jpg" alt="Logo" width="80" height="80">
   </a>
 
   <h3 align="center">Autonomous Car</h3>
