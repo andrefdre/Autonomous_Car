@@ -31,7 +31,7 @@ RECEIVE_DATA_STRUCTURE mydata;                                 //Atributes a eas
 #define Baud 250000                                            //Sets the communication baudRate with the computer
 #define steerc 150                                             //Center of the wheels
 #define lightpin 46                                            //Defines the light pin
-#define motorPin 0                                              //Define the motor pin
+#define motorPin 0                                             //Define the motor pin
 #define servoPin 1                                             //Define the servo pin
 
 //Variables
@@ -55,7 +55,7 @@ void setup() {
   HCPCA9685.Init(SERVO_MODE);                                   //Initialise the library and set it to 'servo mode
   HCPCA9685.Sleep(false);                                       //Wakes the driver
   HCPCA9685.Servo(servoPin, steerc);                            //Center the wheels
-  HCPCA9685.Servo(motorPin, 150);                                //Defines the neutral in motor
+  HCPCA9685.Servo(motorPin, 150);                               //Defines the neutral in motor
   pinMode(lightpin, OUTPUT);                                    //Initializes light Pin
   digitalWrite(lightpin, LOW);                                  //Starts the lights as turnoff
 
