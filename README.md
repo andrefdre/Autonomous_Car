@@ -63,11 +63,11 @@
 <!-- Introduction -->
 ## Introduction
 
-This projected started in the beggining of my university and I setup myself to build an autonumous car that could drive alone.
-The main objective was to make the car and add GPS navigation so it could have coordinates previously set up and then run that course.
-So it all started with the mechanical part of the project with the palns to be 4 wheel drive and have a better suspension than the previous version. The components were mostly 3D printed and only the shafts and some other parts where bought.
-After that, started the developemnt of the eletrical componnets alongside the programming of the code. This part was the most difficult since I had lots of problems with the communication beetwen the car and the controller. 
-The previous version used bluetoth chips but since the range was very limited i eventualy changed to RF24 chips wich use radio waves that has more range.  
+<p>This projected started in the beggining of my university and I setup myself to build an autonumous car that could drive alone. </p>
+<p>The main objective was to make the car and add GPS navigation so it could have coordinates previously set up and then run that course. </p>
+<p>So it all started with the mechanical part of the project with the palns to be 4 wheel drive and have a better suspension than the previous version. The components were mostly 3D printed and only the shafts and some other parts where bought. </p>
+<p>After that, started the developemnt of the eletrical componnets alongside the programming of the code. This part was the most difficult since I had lots of problems with the communication beetwen the car and the controller.  </p>
+<p>The previous version used bluetoth chips but since the range was very limited i eventualy changed to RF24 chips wich use radio waves that has more range.  </p>
 
 <p> Previous version: </p> 
 <img src="Images/Previous_car.jpg" alt="Logo" width="400" height="300">
