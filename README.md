@@ -73,7 +73,7 @@ This projected started in the beggining of my university and I setup myself to b
 In the beggining the main objective was to make a car that could drive around with no problems. It started to use bluetooth to communicate but soon noticed it had a lower range so in this version, the 3rd, I used the RF24 module that uses radio waves whice increases the range.
 Also the first 2 versions it was rear drive while this one I tried to see how hard it was to make a 4 wheel drive with an improved suspension.
 
-Previous version:
+<p>Previous version:
 <img src="Images/Previous_car.jpg" alt="Logo" width="400" height="300">
 
 
