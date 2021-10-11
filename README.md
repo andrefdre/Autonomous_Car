@@ -72,7 +72,7 @@ Also the first 2 versions it was rear drive while this one I tried to see how ha
 
 
 
-For more see the [open issues](https://github.com/othneildrew/Best-README-Template/issues) for a full list of proposed features (and known issues).
+For more see the [open issues](https://github.com/andrefdre/Carro/issues) for a full list of proposed features (and known issues).
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
