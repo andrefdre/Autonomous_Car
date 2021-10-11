@@ -54,6 +54,7 @@
   <summary>Table of Contents</summary>
   <ol>
     <li><a href="#Introduction">Introducion</a></li>
+    <li><a href="Requeried libraries">Required libraries</a> </li> 
     <li><a href="#license">License</a></li>
     <li><a href="#contact">Contact</a></li>
   </ol>
@@ -78,6 +79,19 @@ For more see the [open issues](https://github.com/andrefdre/Carro/issues) for a 
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
+## Required libraries
+
+The arduino code requires some dependencies:
+<ol>
+    <li><a href="https://github.com/embeddedartistry/arduino-printf">LibPrintf</a></li>
+    <li><a href="https://forum.hobbycomponents.com/viewtopic.php?t=2034">HCPCA9685</a> </li> 
+    <li><a href="https://www.arduino.cc/en/reference/SPI">SPI</a></li>
+    <li><a href="https://github.com/nRF24/RF24">RF24</a></li>
+  </ol>
+
+
+
+<p align="right">(<a href="#top">back to top</a>)</p>
 
 <!-- LICENSE -->
 ## License
