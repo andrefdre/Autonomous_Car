@@ -54,7 +54,7 @@
   <summary>Table of Contents</summary>
   <ol>
     <li><a href="#Introduction">Introducion</a></li>
-    <li><a href="#Required libraries">Required libraries</a> </li> 
+    <li><a href="#Required%20libraries">Required libraries</a> </li> 
     <li><a href="#License">License</a></li>
     <li><a href="#Contact">Contact</a></li>
   </ol>
@@ -80,7 +80,7 @@ For more see the [open issues](https://github.com/andrefdre/Carro/issues) for a 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 <!-- Required libraries -->
-## Required libraries
+## Required%20libraries
 
 The arduino code requires some dependencies:
 <ol>
