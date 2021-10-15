@@ -80,7 +80,7 @@ For more see the [open issues](https://github.com/andrefdre/Carro/issues) for a 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 <!-- Required_Libraries -->
-## Required&#32Libraries
+## Required Libraries
 
 The arduino code requires some dependencies:
 <ol>
