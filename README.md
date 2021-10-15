@@ -54,7 +54,7 @@
   <summary>Table of Contents</summary>
   <ol>
     <li><a href="#Introduction">Introducion</a></li>
-    <li><a href="#Libraries">Required libraries</a> </li> 
+    <li><a href="#Libraries">Libraries</a> </li> 
     <li><a href="#License">License</a></li>
     <li><a href="#Contact">Contact</a></li>
   </ol>
