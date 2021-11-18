@@ -1,0 +1,258 @@
+{
+  "uuid": "6f7470d562a44b033e44aad80c593a7f",
+  "path": "Offline/Carro",
+  "name": "Carro",
+  "content": "",
+  "created_at": "2021-10-19 18:35:33",
+  "updated_at": "2021-10-29 23:32:09",
+  "stick": "",
+  "documents": [
+    {
+      "uuid": "27917ea67d962f122b2f5fe00e0f1153",
+      "title": "Sheet_1",
+      "description": "",
+      "docType": "1",
+      "master": "4913d6ba6b0227670640648b067ba29b",
+      "thumb": "/images/thumb-default.png",
+      "components": {
+        "ffb357195fd54d36ba3c4c021b202e3e": 5,
+        "27abc73ba5033d1126fd4d36740da2a2": 1,
+        "93b4da322d5040b3be54f83078d47c52": 2,
+        "750e69b467884d0ebffbde4cb503798e": 1,
+        "15cbf2abc13e461cb8f8dfb91606766d": 2,
+        "e6d8daef044349f08a95e0d29dc1fb74": 1,
+        "dae180d62c674aa7a690c25179130f3c": 1
+      },
+      "BOM": [
+        [
+          "Value",
+          "Quantity",
+          "Package",
+          "Components",
+          "CustomPara"
+        ],
+        [
+          "Analogue",
+          1,
+          "HDR-TH_8P-P2.54-V-M",
+          "ANALOGUE",
+          {
+            "BOM_Supplier": "LCSC",
+            "BOM_Supplier Part": "C2894931",
+            "BOM_Manufacturer": "HCTL(华灿天禄)",
+            "BOM_Manufacturer Part": "PZ254-1-08-Z-8.5",
+            "puuid": "7142253ac24c42e1954a7f7d1d66b136",
+            "uuid": "ffb357195fd54d36ba3c4c021b202e3e"
+          }
+        ],
+        [
+          "Analogue 1",
+          1,
+          "HDR-TH_8P-P2.54-V-M",
+          "ANALOGUE1",
+          {
+            "BOM_Supplier": "LCSC",
+            "BOM_Supplier Part": "C2894931",
+            "BOM_Manufacturer": "HCTL(华灿天禄)",
+            "BOM_Manufacturer Part": "PZ254-1-08-Z-8.5",
+            "puuid": "7142253ac24c42e1954a7f7d1d66b136",
+            "uuid": "ffb357195fd54d36ba3c4c021b202e3e"
+          }
+        ],
+        [
+          "Communication",
+          1,
+          "HDR-TH_8P-P2.54-V-M",
+          "COMMUNICATION",
+          {
+            "BOM_Supplier": "LCSC",
+            "BOM_Supplier Part": "C2894931",
+            "BOM_Manufacturer": "HCTL(华灿天禄)",
+            "BOM_Manufacturer Part": "PZ254-1-08-Z-8.5",
+            "puuid": "7142253ac24c42e1954a7f7d1d66b136",
+            "uuid": "ffb357195fd54d36ba3c4c021b202e3e"
+          }
+        ],
+        [
+          "Compasso",
+          1,
+          "HDR-TH_8P-P2.00-V-M",
+          "COMPASS",
+          {
+            "BOM_Supplier": "LCSC",
+            "BOM_Supplier Part": "C225260",
+            "BOM_Manufacturer": "Changjiang Connectors",
+            "BOM_Manufacturer Part": "A2005WV-8P",
+            "BOM_JLCPCB Part Class": "Extended Part",
+            "puuid": "ea96702d67a44e298313b9018cfbe3c6",
+            "uuid": "e6d8daef044349f08a95e0d29dc1fb74"
+          }
+        ],
+        [
+          "PZ254-2-18-Z-8.5",
+          1,
+          "HDR-TH_36P-P2.54-V-M-R2-C18-S2.54",
+          "DIGITAL",
+          {
+            "BOM_Supplier": "LCSC",
+            "BOM_Supplier Part": "C2894979",
+            "BOM_Manufacturer": "HCTL(华灿天禄)",
+            "BOM_Manufacturer Part": "PZ254-2-18-Z-8.5",
+            "puuid": "7012a5280a4447c6b89d74d20dba8ed7",
+            "uuid": "dae180d62c674aa7a690c25179130f3c"
+          }
+        ],
+        [
+          "GPS",
+          1,
+          "HDR-TH_05P-P2.54-V-M",
+          "GPS",
+          {
+            "BOM_Supplier": "LCSC",
+            "BOM_Supplier Part": "C2894928",
+            "BOM_Manufacturer": "HCTL(华灿天禄)",
+            "BOM_Manufacturer Part": "PZ254-1-05-Z-8.5",
+            "puuid": "b0773b3dd7d5400a8d73e48e6cb0fb28",
+            "uuid": "15cbf2abc13e461cb8f8dfb91606766d"
+          }
+        ],
+        [
+          "Luzes",
+          1,
+          "HDR-TH_2P-P2.54-V-M-3",
+          "LIGHTS",
+          {
+            "BOM_Supplier": "LCSC",
+            "BOM_Supplier Part": "C464599",
+            "BOM_Manufacturer": "Amphenol ICC",
+            "BOM_Manufacturer Part": "77311-818-02LF",
+            "BOM_JLCPCB Part Class": "Extended Part",
+            "puuid": "c1e7930568a246c7aca1be33bf9ee5d4",
+            "uuid": "93b4da322d5040b3be54f83078d47c52"
+          }
+        ],
+        [
+          "Power",
+          1,
+          "HDR-TH_2P-P2.54-V-M-3",
+          "MAIN_POWER",
+          {
+            "BOM_Supplier": "LCSC",
+            "BOM_Supplier Part": "C464599",
+            "BOM_Manufacturer": "Amphenol ICC",
+            "BOM_Manufacturer Part": "77311-818-02LF",
+            "BOM_JLCPCB Part Class": "Extended Part",
+            "puuid": "c1e7930568a246c7aca1be33bf9ee5d4",
+            "uuid": "93b4da322d5040b3be54f83078d47c52"
+          }
+        ],
+        [
+          "Power",
+          1,
+          "HDR-TH_8P-P2.54-V-M",
+          "POWER",
+          {
+            "BOM_Supplier": "LCSC",
+            "BOM_Supplier Part": "C2894931",
+            "BOM_Manufacturer": "HCTL(华灿天禄)",
+            "BOM_Manufacturer Part": "PZ254-1-08-Z-8.5",
+            "puuid": "7142253ac24c42e1954a7f7d1d66b136",
+            "uuid": "ffb357195fd54d36ba3c4c021b202e3e"
+          }
+        ],
+        [
+          "PWM",
+          1,
+          "HDR-TH_8P-P2.54-V-M",
+          "PWM",
+          {
+            "BOM_Supplier": "LCSC",
+            "BOM_Supplier Part": "C2894931",
+            "BOM_Manufacturer": "HCTL(华灿天禄)",
+            "BOM_Manufacturer Part": "PZ254-1-08-Z-8.5",
+            "puuid": "7142253ac24c42e1954a7f7d1d66b136",
+            "uuid": "ffb357195fd54d36ba3c4c021b202e3e"
+          }
+        ],
+        [
+          "PWM1",
+          1,
+          "HDR-TH_10P-P2.54-V-M-1",
+          "PWM2",
+          {
+            "BOM_Supplier": "LCSC",
+            "BOM_Manufacturer Part": "Headers  Pins2.54mm1*10P",
+            "BOM_Supplier Part": "C57369",
+            "BOM_JLCPCB Part Class": "Extended Part",
+            "puuid": "ef10e215415a49a49cdabc8e1fed0af1",
+            "uuid": "27abc73ba5033d1126fd4d36740da2a2"
+          }
+        ],
+        [
+          "RF24",
+          1,
+          "HDR-TH_8P-P2.54-V-M-R2-C4-S2.54",
+          "RF24",
+          {
+            "BOM_Supplier": "LCSC",
+            "BOM_Supplier Part": "C168672",
+            "BOM_Manufacturer": "Amphenol ICC",
+            "BOM_Manufacturer Part": "68602-108HLF",
+            "BOM_JLCPCB Part Class": "Extended Part",
+            "puuid": "2d9393260a4d4240be84610858eaad16",
+            "uuid": "750e69b467884d0ebffbde4cb503798e"
+          }
+        ],
+        [
+          "Servo driver",
+          1,
+          "HDR-TH_05P-P2.54-V-M",
+          "SERVO_DRIVER",
+          {
+            "BOM_Supplier": "LCSC",
+            "BOM_Supplier Part": "C2894928",
+            "BOM_Manufacturer": "HCTL(华灿天禄)",
+            "BOM_Manufacturer Part": "PZ254-1-05-Z-8.5",
+            "puuid": "b0773b3dd7d5400a8d73e48e6cb0fb28",
+            "uuid": "15cbf2abc13e461cb8f8dfb91606766d"
+          }
+        ]
+      ],
+      "updateTime": 1635546729,
+      "createTime": 1634680054,
+      "histories": [],
+      "created_at": "2021-10-19 22:47:34",
+      "updated_at": "2021-10-29 23:32:09"
+    },
+    {
+      "uuid": "9eeb5c9181da9d0fff90d6bd628f9568",
+      "puuid": "6f7470d562a44b033e44aad80c593a7f",
+      "title": "PCB_Carro",
+      "filename": "PCB_Carro.json",
+      "description": "",
+      "docType": "3",
+      "master": "",
+      "thumb": "/images/thumb-default.png",
+      "components": {
+        "7142253ac24c42e1954a7f7d1d66b136": 5,
+        "ea96702d67a44e298313b9018cfbe3c6": 1,
+        "7012a5280a4447c6b89d74d20dba8ed7": 1,
+        "b0773b3dd7d5400a8d73e48e6cb0fb28": 2,
+        "c1e7930568a246c7aca1be33bf9ee5d4": 2,
+        "ef10e215415a49a49cdabc8e1fed0af1": 1,
+        "2d9393260a4d4240be84610858eaad16": 1
+      },
+      "BOM": [],
+      "updateTime": 1634910197,
+      "createTime": 1634908460,
+      "histories": [],
+      "created_at": "2021-10-22 14:14:20",
+      "updated_at": "2021-10-22 14:43:17"
+    }
+  ],
+  "sort": [],
+  "title": "Carro",
+  "foldername": "Carro",
+  "schfilename": "Carro.json",
+  "schfilemtime": 1635546729035
+}
