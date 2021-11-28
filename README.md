@@ -29,7 +29,7 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/othneildrew/Best-README-Template">
+  <a href="https://github.com/andrefdre/Autonomous_Car">
     <img src="Images/Logo.jpg" alt="Logo" width="400" height="300">
   </a>
 
