@@ -1,8 +1,8 @@
 /*
 	Autonumous Car
 
-	The code first checks if it is still receving information, if it is then keep receiving and then send use that information to control the servo and the motor. In the end 
-  send the information to the serial for debbguing porposes.  
+	This is the code for the controller. It is what establishes the interactions with the user, using joysticks and button it reads the inputs the user gives 
+  and then sends it to the car through the RF24 module, wich uses radio waves to communicate.  
   
   Componnents:
   - Arduino Uno

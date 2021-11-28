@@ -88,6 +88,7 @@ The arduino code requires some dependencies:
     <li><a href="https://forum.hobbycomponents.com/viewtopic.php?t=2034">HCPCA9685</a> </li> 
     <li><a href="https://www.arduino.cc/en/reference/SPI">SPI</a></li>
     <li><a href="https://github.com/nRF24/RF24">RF24</a></li>
+    <li><a href="https://www.arduino.cc/reference/en/libraries/libprintf/">LibPrintf</a></li>
   </ol>
 
 
