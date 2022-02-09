@@ -44,12 +44,14 @@ struct RECEIVE_DATA_STRUCTURE
   int light;
   int slow;
   int alone;
+  int vmais;
 };
 RECEIVE_DATA_STRUCTURE mydata; // Atributes a easier name to be used in the structure
 
 // General variables
-#define Baud 250000 // Sets the communication baudRate with the computer
-#define steerc 150  // Center of the wheels
+#define Baud 115200 // Sets the communication baudRate with the computer
+#define center 85  // Center of the wheels
+#define steervalue 33   // Defines the amount the wheels will turn
 #define lightpin 22 // Defines the light pin
 #define motorPin 0  // Define the motor pin
 #define servoPin 1  // Define the servo pin
@@ -58,7 +60,7 @@ RECEIVE_DATA_STRUCTURE mydata; // Atributes a easier name to be used in the stru
 bool rslt;              // Stores the result of the communication
 int light1 = 0;         // Lights value(0-off, 1-on)
 long previoustime = 0;  // Time the lights value was changed
-long time = 0;          // Time for the commutation of the light pin
+long time3 = 0;          // Time for the commutation of the light pin
 long previoustime1 = 0; // Last time it was received communication
 long time1 = 0;         // Time to check if the arduino is still communicating with controller
 long previoustime2 = 0; // Time the modo was changed
@@ -73,16 +75,25 @@ void setup()
   // HCPCA9685
   HCPCA9685.Init(SERVO_MODE);        // Initialise the library and set it to 'servo mode
   HCPCA9685.Sleep(false);            // Wakes the driver
-  HCPCA9685.Servo(servoPin, steerc); // Center the wheels
-  HCPCA9685.Servo(motorPin, 150);    // Defines the neutral in motor
+  HCPCA9685.Servo(servoPin, center); // Center the wheels
+  //HCPCA9685.Servo(motorPin, center);    // Defines the neutral in motor
+  delay(1000);
+  HCPCA9685.Servo(motorPin, 180);    // Defines the neutral in motor
   pinMode(lightpin, OUTPUT);         // Initializes light Pin
   digitalWrite(lightpin, LOW);       // Starts the lights as turnoff
 
-  // RF24
-  radio.begin();                          // Starts the radio driver
-  radio.openReadingPipe(1, slaveAddress); // Opens a pipe to communicate(must be the same as the controller) with the controller
-  radio.startListening();                 // Sets the RF24 driver to listening for new information
+  //SPI
+  SPI.setClockDivider( 100000 );
+  SPI.setDataMode( SPI_MODE0 ); //tentar ate ao modulo 0 1 2 3
 
+  // RF24
+  if (!radio.begin()) {
+    Serial.println(F("radio hardware is not responding!!"));
+    while (1) {} // hold in infinite loop
+  }
+  radio.openReadingPipe(0, slaveAddress);// Opens a pipe to communicate(must be the same as the controller) with the controller
+  radio.startListening();                 // Sets the RF24 driver to listening for new information
+  
   // Arduino setup Check
   printf("Arduino Initialized"); // Checks if the arduino setups correctly
 }
@@ -92,10 +103,10 @@ void loop()
   // Checks if the arduino is still receiving information through radio waves, if not centers the wheels and puts it in neutral
   if ((time1 - previoustime1) >= 20)
   {
-    HCPCA9685.Servo(motorPin, 150); // Velocity
-    HCPCA9685.Servo(servoPin, 150); // Steer
-    mydata.steer = 150;
-    mydata.velocity = 150;
+    HCPCA9685.Servo(motorPin, center); // Velocity
+    HCPCA9685.Servo(servoPin, center); // Steer
+    mydata.steer = center;
+    mydata.velocity = center;
   }
 
   else
@@ -107,12 +118,13 @@ void loop()
       previoustime1 = time1;               // Reset the time variable
     }
   }
-
+  
+if
   // Checks the received information is within accepted values and then sends it to the servo driver
-  if (mydata.steer < 124 || mydata.steer > 175 || mydata.velocity > 183 || mydata.velocity < 117)
+  if (mydata.steer < center-steervalue || mydata.steer > center+steervalue || mydata.velocity > 90+mydata.vmais || mydata.velocity < 90-mydata.vmais)
   {
-    HCPCA9685.Servo(motorPin, 150); // Velocity
-    HCPCA9685.Servo(servoPin, 150); // Steer
+    HCPCA9685.Servo(motorPin, center); // Velocity
+    HCPCA9685.Servo(servoPin, center); // Steer
   }
   else
   {
@@ -121,7 +133,7 @@ void loop()
   }
 
   // Checks if the button was pressed recently, if not it will change its output
-  if (time - previoustime >= 10)
+  if (time3 - previoustime >= 10)
   {
     if (mydata.light == 1)
     {
@@ -130,12 +142,12 @@ void loop()
       case 0:
         digitalWrite(lightpin, HIGH);
         light1 = 1;
-        previoustime = time;
+        previoustime = time3;
         break;
       case 1:
         digitalWrite(lightpin, LOW);
         light1 = 0;
-        previoustime = time;
+        previoustime = time3;
         break;
       }
     }
@@ -161,12 +173,23 @@ void loop()
   }
 
   // Increments the time variables to check in the future if the respective variables can be changed
-  time++;
+
   time1++;
   time2++;
-
+  time3++;
+  
   // Writes to Serial for debbuging
-  printf("\nVelocity: ", mydata.velocity, "  Steer: ", mydata.steer, "  Diferença: ", time1 - previoustime1, "  Modo: ", mode);
+  Serial.print("\nSteer:");
+  Serial.print(mydata.steer);
+  Serial.print("  Velocity:");
+  Serial.print(mydata.velocity);
+  Serial.print("  Diferença: ");
+  Serial.print(time1 - previoustime1);
+  Serial.print("  Modo: ");
+  Serial.print(mode);
+  Serial.print("  Chanell: ");
+  Serial.print(radio.getChannel());
+ 
 
-  delay(20);
+  delay(10);
 }

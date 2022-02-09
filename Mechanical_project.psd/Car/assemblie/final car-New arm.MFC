@@ -1,0 +1,16 @@
+[StartTime]
+final car-New arm.MFC=8s
+[SolverState]
+final car-New arm.MFC=2
+[MainFrame]
+final car-New arm.MFC=MCAAAAAAAAAAAAAABAAAAAAAPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPMADAAAAADLBAAAAAEHEAAAAAGICAAAAA
+[ShowMin]
+final car-New arm.MFC=No
+[SolverType]
+final car-New arm.MFC=Linear Analysis
+[StudyType]
+final car-New arm.MFC=0
+[StudyName]
+final car-New arm.MFC=New arm
+[Solver]
+final car-New arm.MFC=Sparse
