@@ -29,6 +29,7 @@
 #include <nRF24L01.h> //Includes the library for the communication with radio waves
 #include <RF24.h>     //Includes the library for the communication with radio waves
 
+Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver();
 
 // RF24
 const byte slaveAddress[6] = "00001"; // Sets the address for communitating with the controller(must be the same in the controller)
@@ -55,10 +56,10 @@ RECEIVE_DATA_STRUCTURE mydata; // Atributes a easier name to be used in the stru
 #define lightpin 22   // Defines the light pin
 #define motorPin 0    // Define the motor pin
 #define servoPin 1    // Define the servo pin
-#define SERVOMIN 500
-#define SERVOMAX 2500
-#define MOTORMiN 1000
-#define MOTORMAX 2000
+#define SERVOMIN 150
+#define SERVOMAX 600
+#define MOTORMiN 170
+#define MOTORMAX 370
 
 // Variables
 bool rslt;              // Stores the result of the communication
@@ -80,6 +81,8 @@ void setup()
 
   // HCPCA9685
   pwm.begin();
+  pwm.setOscillatorFrequency(27000000);
+  pwm.setPWMFreq(50);  // Analog servos run at ~50 Hz updates
   motor_pulselength = map(90, 0, 180, MOTORMiN, MOTORMAX);
   pwm.setPWM(motorPin, 0, motor_pulselength); // check parameter like 150 to 600 or 0 to 4096
   servo_pulselength = map(center, 0, 270, SERVOMIN, SERVOMAX);
@@ -194,10 +197,14 @@ void loop()
   time3++;
 
   // Writes to Serial for debbuging
-  Serial.print("\nSteer:");
+  Serial.print("\nSteer:  ");
   Serial.print(mydata.steer);
-  Serial.print("  Velocity:");
+  Serial.print("  Steer pulse: ");
+  Serial.print(servo_pulselength);
+  Serial.print("  Velocity:  ");
   Serial.print(mydata.velocity);
+  Serial.print("  Motor pulse:  ");
+  Serial.print(motor_pulselength);
   Serial.print("  Diferença: ");
   Serial.print(time1 - previoustime1);
   Serial.print("  Modo: ");
