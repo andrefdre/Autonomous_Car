@@ -55,8 +55,10 @@ RECEIVE_DATA_STRUCTURE mydata; // Atributes a easier name to be used in the stru
 #define lightpin 22   // Defines the light pin
 #define motorPin 0    // Define the motor pin
 #define servoPin 1    // Define the servo pin
-#define SERVOMIN 150
-#define SERVOMAX 600
+#define SERVOMIN 500
+#define SERVOMAX 2500
+#define MOTORMiN 1000
+#define MOTORMAX 2000
 
 // Variables
 bool rslt;              // Stores the result of the communication
@@ -74,13 +76,13 @@ int servo_pulselength;
 void setup()
 {
   // Serial communication
-  Serial.begin(Baud); // Inicializes Serial comunnication with the computer for debugging
+  Serial.begin(Baud); // Initializes Serial communication with the computer for debugging
 
   // HCPCA9685
   pwm.begin();
-  motor_pulselength = map(90, 0, 180, SERVOMIN, SERVOMAX);
+  motor_pulselength = map(90, 0, 180, MOTORMiN, MOTORMAX);
   pwm.setPWM(motorPin, 0, motor_pulselength); // check parameter like 150 to 600 or 0 to 4096
-  servo_pulselength = map(center, 0, 180, SERVOMIN, SERVOMAX);
+  servo_pulselength = map(center, 0, 270, SERVOMIN, SERVOMAX);
   pwm.setPWM(servoPin, 0, servo_pulselength); // check parameter like 150 to 600 or 0 to 4096
 
   // Lights
@@ -111,9 +113,9 @@ void loop()
   // Checks if the arduino is still receiving information through radio waves, if not centers the wheels and puts it in neutral
   if ((time1 - previoustime1) >= 20)
   {
-    motor_pulselength = map(90, 0, 180, SERVOMIN, SERVOMAX);
+    motor_pulselength = map(90, 0, 180, MOTORMiN, MOTORMAX);
     pwm.setPWM(motorPin, 0, motor_pulselength); 
-    servo_pulselength = map(center, 0, 180, SERVOMIN, SERVOMAX);
+    servo_pulselength = map(center, 0, 270, SERVOMIN, SERVOMAX);
     pwm.setPWM(servoPin, 0, servo_pulselength); 
     mydata.steer = center;
     mydata.velocity = 90;
@@ -131,16 +133,16 @@ void loop()
   // Checks the received information is within accepted values and then sends it to the servo driver
     if (mydata.steer < center - steervalue || mydata.steer > center + steervalue || mydata.velocity > 90 + mydata.vmais || mydata.velocity < 90 - mydata.vmais)
     {
-      motor_pulselength = map(90, 0, 180, SERVOMIN, SERVOMAX);
+      motor_pulselength = map(90, 0, 180, MOTORMiN, MOTORMAX);
       pwm.setPWM(motorPin, 0, motor_pulselength); 
-      servo_pulselength = map(center, 0, 180, SERVOMIN, SERVOMAX);
+      servo_pulselength = map(center, 0, 270, SERVOMIN, SERVOMAX);
       pwm.setPWM(servoPin, 0, servo_pulselength); 
     }
     else
     {
-      motor_pulselength = map(mydata.velocity, 0, 180, SERVOMIN, SERVOMAX);
+      motor_pulselength = map(mydata.velocity, 0, 180, MOTORMiN, MOTORMAX);
       pwm.setPWM(motorPin, 0, motor_pulselength); 
-      servo_pulselength = map(mydata.steer, 0, 180, SERVOMIN, SERVOMAX);
+      servo_pulselength = map(mydata.steer, 0, 270, SERVOMIN, SERVOMAX);
       pwm.setPWM(servoPin, 0, servo_pulselength); 
     }
 
