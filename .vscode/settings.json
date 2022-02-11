@@ -2,5 +2,10 @@
     "C_Cpp.errorSquiggles": "Disabled",
     "cSpell.words": [
         "Lipo"
-    ]
+    ],
+    "cSpell.enableFiletypes": [
+        "arduino",
+        "arduino-output"
+    ],
+    "cSpell.language": "en,pt,pt-PT"
 }

@@ -35,7 +35,6 @@ Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver();
 const byte slaveAddress[6] = "00001"; // Sets the address for communitating with the controller(must be the same in the controller)
 RF24 radio(7, 8);                     // CE Pin, CSN Pin
 
-
 // Structure with the received information
 struct RECEIVE_DATA_STRUCTURE
 {
@@ -48,7 +47,6 @@ struct RECEIVE_DATA_STRUCTURE
 };
 RECEIVE_DATA_STRUCTURE mydata; // Atributes a easier name to be used in the structure
 
-
 // General variables
 #define Baud 115200   // Sets the communication baudRate with the computer
 #define center 85     // Center of the wheels
@@ -56,10 +54,10 @@ RECEIVE_DATA_STRUCTURE mydata; // Atributes a easier name to be used in the stru
 #define lightpin 22   // Defines the light pin
 #define motorPin 0    // Define the motor pin
 #define servoPin 1    // Define the servo pin
-#define SERVOMIN 500
-#define SERVOMAX 2500
-#define MOTORMiN 1000
-#define MOTORMAX 2000
+#define SERVOMIN 500  // Defines the min pulse for servo
+#define SERVOMAX 2500 // Defines the max pulse for servo
+#define MOTORMiN 1000 // Defines the min pulse for motor
+#define MOTORMAX 2000 // Defines the max pulse for motor
 
 // Variables
 bool rslt;              // Stores the result of the communication
@@ -71,8 +69,8 @@ long time1 = 0;         // Time to check if the arduino is still communicating w
 long previoustime2 = 0; // Time the modo was changed
 long time2 = 0;         // Time for the commutation of the modo
 int mode = 0;           // Defines if its in automatic mode or manual mode (0-manual, 1-automatic)
-int motor_pulselength;
-int servo_pulselength;
+int motor_pulselength;  // Declares the variable that be used to map the value from degrees to microseconds pwm wave for motor
+int servo_pulselength;  // Declares the variable that be used to map the value from degrees to microseconds pwm wave for servo
 
 void setup()
 {
@@ -80,13 +78,13 @@ void setup()
   Serial.begin(Baud); // Initializes Serial communication with the computer for debugging
 
   // HCPCA9685
-  pwm.begin();
-  pwm.setOscillatorFrequency(27000000);
-  pwm.setPWMFreq(50);  // Analog servos run at ~50 Hz updates
-  motor_pulselength = map(90, 0, 180, MOTORMiN, MOTORMAX);
-  pwm.writeMicroseconds(motorPin, motor_pulselength); 
-  servo_pulselength = map(center, 0, 270, SERVOMIN, SERVOMAX);
-  pwm.writeMicroseconds(servoPin, servo_pulselength); 
+  pwm.begin();                                                 // Initializes the PWM driver
+  pwm.setOscillatorFrequency(27000000);                        // Value that needs to be adjusted to have a perfect 50hz (need an oscilloscope to check this)
+  pwm.setPWMFreq(50);                                          // Sets the frequency of the servos which tipically is 50
+  motor_pulselength = map(90, 0, 180, MOTORMiN, MOTORMAX);     // Maps the the angle value to PWM microseconds
+  pwm.writeMicroseconds(motorPin, motor_pulselength);          // Writes to the motor to neutral position
+  servo_pulselength = map(center, 0, 270, SERVOMIN, SERVOMAX); // Maps the the angle value to PWM microseconds
+  pwm.writeMicroseconds(servoPin, servo_pulselength);          // Writes for the servo to center the wheels
 
   // Lights
   pinMode(lightpin, OUTPUT);   // Initializes light Pin
@@ -94,7 +92,7 @@ void setup()
 
   // SPI
   SPI.setClockDivider(100000);
-  SPI.setDataMode(SPI_MODE0); // tentar ate ao modulo 0 1 2 3
+  SPI.setDataMode(SPI_MODE0); // try mode 0 1 2 3
 
   // RF24
   if (!radio.begin())
@@ -116,10 +114,10 @@ void loop()
   // Checks if the arduino is still receiving information through radio waves, if not centers the wheels and puts it in neutral
   if ((time1 - previoustime1) >= 20)
   {
-      motor_pulselength = map(90, 0, 180, MOTORMiN, MOTORMAX);
-      pwm.writeMicroseconds(motorPin, motor_pulselength); 
-      servo_pulselength = map(center, 0, 270, SERVOMIN, SERVOMAX);
-      pwm.writeMicroseconds(servoPin, servo_pulselength); 
+    motor_pulselength = map(90, 0, 180, MOTORMiN, MOTORMAX);     // Maps the the angle value to PWM microseconds
+    pwm.writeMicroseconds(motorPin, motor_pulselength);          // Writes to the motor to neutral position
+    servo_pulselength = map(center, 0, 270, SERVOMIN, SERVOMAX); // Maps the the angle value to PWM microseconds
+    pwm.writeMicroseconds(servoPin, servo_pulselength);          // Writes for the servo to center the wheels
     mydata.steer = center;
     mydata.velocity = 90;
   }
@@ -134,21 +132,20 @@ void loop()
     }
   }
   // Checks the received information is within accepted values and then sends it to the servo driver
-    if (mydata.steer < center - steervalue || mydata.steer > center + steervalue || mydata.velocity > 90 + mydata.vmais || mydata.velocity < 90 - mydata.vmais)
-    {
-      motor_pulselength = map(90, 0, 180, MOTORMiN, MOTORMAX);
-      pwm.writeMicroseconds(motorPin, motor_pulselength); 
-      servo_pulselength = map(center, 0, 270, SERVOMIN, SERVOMAX);
-      pwm.writeMicroseconds(servoPin, servo_pulselength); 
-    }
-    else
-    {
-      motor_pulselength = map(mydata.velocity, 0, 180, MOTORMiN, MOTORMAX);
-      pwm.writeMicroseconds(motorPin, motor_pulselength); 
-      servo_pulselength = map(mydata.steer, 0, 270, SERVOMIN, SERVOMAX);
-      pwm.writeMicroseconds(servoPin, servo_pulselength); 
-      
-    }
+  if (mydata.steer < center - steervalue || mydata.steer > center + steervalue || mydata.velocity > 90 + mydata.vmais || mydata.velocity < 90 - mydata.vmais)
+  {
+    motor_pulselength = map(90, 0, 180, MOTORMiN, MOTORMAX);     // Maps the the angle value to PWM microseconds
+    pwm.writeMicroseconds(motorPin, motor_pulselength);          // Writes to the motor to neutral position
+    servo_pulselength = map(center, 0, 270, SERVOMIN, SERVOMAX); // Maps the the angle value to PWM microseconds
+    pwm.writeMicroseconds(servoPin, servo_pulselength);          // Writes for the servo to center the wheels
+  }
+  else
+  {
+    motor_pulselength = map(mydata.velocity, 0, 180, MOTORMiN, MOTORMAX); // Maps the the angle value to PWM microseconds
+    pwm.writeMicroseconds(motorPin, motor_pulselength);                   // Writes the mapped value to change the motor speed
+    servo_pulselength = map(mydata.steer, 0, 270, SERVOMIN, SERVOMAX);    // Maps the the angle value to PWM microseconds
+    pwm.writeMicroseconds(servoPin, servo_pulselength);                   // Writes the mapped value to steer the wheels
+  }
 
   // Checks if the button was pressed recently, if not it will change its output
   // Changes the light output
