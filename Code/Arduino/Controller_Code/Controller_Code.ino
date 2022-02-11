@@ -31,7 +31,7 @@ struct RECEIVE_DATA_STRUCTURE
   int light;
   int slow;
   int alone;
-  int vmais=90;
+  int vmais=30;
 };
 RECEIVE_DATA_STRUCTURE mydata; // Atributtes a easier name for the structure
 

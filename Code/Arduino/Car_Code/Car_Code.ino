@@ -56,10 +56,10 @@ RECEIVE_DATA_STRUCTURE mydata; // Atributes a easier name to be used in the stru
 #define lightpin 22   // Defines the light pin
 #define motorPin 0    // Define the motor pin
 #define servoPin 1    // Define the servo pin
-#define SERVOMIN 150
-#define SERVOMAX 600
-#define MOTORMiN 170
-#define MOTORMAX 370
+#define SERVOMIN 500
+#define SERVOMAX 2500
+#define MOTORMiN 1000
+#define MOTORMAX 2000
 
 // Variables
 bool rslt;              // Stores the result of the communication
@@ -84,9 +84,9 @@ void setup()
   pwm.setOscillatorFrequency(27000000);
   pwm.setPWMFreq(50);  // Analog servos run at ~50 Hz updates
   motor_pulselength = map(90, 0, 180, MOTORMiN, MOTORMAX);
-  pwm.setPWM(motorPin, 0, motor_pulselength); // check parameter like 150 to 600 or 0 to 4096
+  pwm.writeMicroseconds(motorPin, motor_pulselength); 
   servo_pulselength = map(center, 0, 270, SERVOMIN, SERVOMAX);
-  pwm.setPWM(servoPin, 0, servo_pulselength); // check parameter like 150 to 600 or 0 to 4096
+  pwm.writeMicroseconds(servoPin, servo_pulselength); 
 
   // Lights
   pinMode(lightpin, OUTPUT);   // Initializes light Pin
@@ -116,10 +116,10 @@ void loop()
   // Checks if the arduino is still receiving information through radio waves, if not centers the wheels and puts it in neutral
   if ((time1 - previoustime1) >= 20)
   {
-    motor_pulselength = map(90, 0, 180, MOTORMiN, MOTORMAX);
-    pwm.setPWM(motorPin, 0, motor_pulselength); 
-    servo_pulselength = map(center, 0, 270, SERVOMIN, SERVOMAX);
-    pwm.setPWM(servoPin, 0, servo_pulselength); 
+      motor_pulselength = map(90, 0, 180, MOTORMiN, MOTORMAX);
+      pwm.writeMicroseconds(motorPin, motor_pulselength); 
+      servo_pulselength = map(center, 0, 270, SERVOMIN, SERVOMAX);
+      pwm.writeMicroseconds(servoPin, servo_pulselength); 
     mydata.steer = center;
     mydata.velocity = 90;
   }
@@ -137,16 +137,17 @@ void loop()
     if (mydata.steer < center - steervalue || mydata.steer > center + steervalue || mydata.velocity > 90 + mydata.vmais || mydata.velocity < 90 - mydata.vmais)
     {
       motor_pulselength = map(90, 0, 180, MOTORMiN, MOTORMAX);
-      pwm.setPWM(motorPin, 0, motor_pulselength); 
+      pwm.writeMicroseconds(motorPin, motor_pulselength); 
       servo_pulselength = map(center, 0, 270, SERVOMIN, SERVOMAX);
-      pwm.setPWM(servoPin, 0, servo_pulselength); 
+      pwm.writeMicroseconds(servoPin, servo_pulselength); 
     }
     else
     {
       motor_pulselength = map(mydata.velocity, 0, 180, MOTORMiN, MOTORMAX);
-      pwm.setPWM(motorPin, 0, motor_pulselength); 
+      pwm.writeMicroseconds(motorPin, motor_pulselength); 
       servo_pulselength = map(mydata.steer, 0, 270, SERVOMIN, SERVOMAX);
-      pwm.setPWM(servoPin, 0, servo_pulselength); 
+      pwm.writeMicroseconds(servoPin, servo_pulselength); 
+      
     }
 
   // Checks if the button was pressed recently, if not it will change its output
