@@ -39,15 +39,9 @@ RECEIVE_DATA_STRUCTURE mydata; // Atributes a easier name for the structure
 #define BaudRate 115200 // Defines the baudRate for the communition with serial
 #define CE_PIN 7        // Defines the CE Pin
 #define CSN_PIN 8       // Defines the CSN Pin
-<<<<<<< HEAD
 #define center 90      // Defines the center of the neutral in the motor
 #define centerw 90     // Defines the center of the wheels
 #define steervalue 22   // Defines the amount the wheels will turn
-=======
-#define center 90       // Defines the center of the neutral in the motor
-#define centerw 85      // Defines the center of the wheels
-#define steervalue 33   // Defines the amount the wheels will turn
->>>>>>> d12284e7556f23bc931fd4fd806c4e58b5b3836a
 #define velocity_pin A0 // Defines velocity pin
 #define steer_pin A2    // Defines steer pin
 #define mode_pin 2      // Defines mode pin
