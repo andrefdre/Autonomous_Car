@@ -50,7 +50,7 @@ RECEIVE_DATA_STRUCTURE mydata; // Atributes a easier name to be used in the stru
 
 // General variables
 #define Baud 115200 // Sets the communication baudRate with the computer
-#define center 85  // Center of the wheels
+#define center 90  // Center of the wheels
 #define steervalue 33   // Defines the amount the wheels will turn
 #define lightpin 22 // Defines the light pin
 #define motorPin 0  // Define the motor pin

@@ -40,8 +40,8 @@ RECEIVE_DATA_STRUCTURE mydata; // Atributtes a easier name for the structure
 #define CE_PIN 7        // Defines the CE Pin
 #define CSN_PIN 8       // Defines the CSN Pin
 #define center 90      // Defines the center of the neutral in the motor
-#define centerw 85     // Defines the center of the wheels
-#define steervalue 33   // Defines the amount the wheels will turn
+#define centerw 90     // Defines the center of the wheels
+#define steervalue 22   // Defines the amount the wheels will turn
 #define velocity_pin A0 // Defines velocity pin
 #define steer_pin A2    // Defines steer pin
 #define mode_pin 2      // Defines mode pin
