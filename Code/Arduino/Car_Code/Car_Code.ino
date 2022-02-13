@@ -48,17 +48,9 @@ struct RECEIVE_DATA_STRUCTURE
 RECEIVE_DATA_STRUCTURE mydata; // Atributes a easier name to be used in the structure
 
 // General variables
-<<<<<<< HEAD
-#define Baud 115200 // Sets the communication baudRate with the computer
-#define center 90  // Center of the wheels
-#define steervalue 33   // Defines the amount the wheels will turn
-#define lightpin 22 // Defines the light pin
-#define motorPin 0  // Define the motor pin
-#define servoPin 1  // Define the servo pin
-=======
 #define Baud 115200   // Sets the communication baudRate with the computer
-#define center 85     // Center of the wheels
-#define steervalue 33 // Defines the amount the wheels will turn
+#define center 90     // Center of the wheels
+#define steervalue 22 // Defines the amount the wheels will turn
 #define lightpin 22   // Defines the light pin
 #define motorPin 0    // Define the motor pin
 #define servoPin 1    // Define the servo pin
@@ -66,7 +58,6 @@ RECEIVE_DATA_STRUCTURE mydata; // Atributes a easier name to be used in the stru
 #define SERVOMAX 2500 // Defines the max pulse for servo
 #define MOTORMiN 1000 // Defines the min pulse for motor
 #define MOTORMAX 2000 // Defines the max pulse for motor
->>>>>>> d12284e7556f23bc931fd4fd806c4e58b5b3836a
 
 // Variables
 bool rslt;              // Stores the result of the communication
