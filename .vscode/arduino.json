@@ -1,6 +1,3 @@
 {
-    "sketch": "Code\\Arduino\\Controller_Code\\Controller_Code.ino",
-    "configuration": "cpu=atmega2560",
-    "board": "arduino:avr:mega",
-    "programmer": "arduino:avrisp"
+    "board": "arduino:avr:mega"
 }
