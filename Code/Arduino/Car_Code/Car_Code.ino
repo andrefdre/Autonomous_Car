@@ -68,9 +68,11 @@ long previoustime1 = 0; // Last time it was received communication
 long time1 = 0;         // Time to check if the arduino is still communicating with controller
 long previoustime2 = 0; // Time the modo was changed
 long time2 = 0;         // Time for the commutation of the modo
+long time4 = 0;         // Timer for counting how long the car lost communication
 int mode = 0;           // Defines if its in automatic mode or manual mode (0-manual, 1-automatic)
 int motor_pulselength;  // Declares the variable that be used to map the value from degrees to microseconds pwm wave for motor
 int servo_pulselength;  // Declares the variable that be used to map the value from degrees to microseconds pwm wave for servo
+int chanell;
 
 void setup()
 {
@@ -104,6 +106,7 @@ void setup()
   }
   radio.openReadingPipe(0, slaveAddress); // Opens a pipe to communicate(must be the same as the controller) with the controller
   radio.startListening();                 // Sets the RF24 driver to listening for new information
+  chanell = radio.getChannel();
 
   // Arduino setup Check
   printf("Arduino Initialized"); // Checks if the arduino setups correctly
@@ -120,7 +123,22 @@ void loop()
     pwm.writeMicroseconds(servoPin, servo_pulselength);          // Writes for the servo to center the wheels
     mydata.steer = center;
     mydata.velocity = 90;
+    time4++;
+    radio.powerDown();
+    radio.setChannel(chanell);
+    delay(20);
   }
+
+if (time4>=250)
+{
+  previoustime1 = time1;
+  radio.powerUp();
+  radio.openReadingPipe(0, slaveAddress); // Opens a pipe to communicate(must be the same as the controller) with the controller
+  radio.startListening();  
+
+  
+
+}
 
   else
   {
