@@ -28,8 +28,11 @@
 #include <SPI.h>      //Required library for RF24 communication
 #include <nRF24L01.h> //Includes the library for the communication with radio waves
 #include <RF24.h>     //Includes the library for the communication with radio waves
+#include <TinyGPS.h>
 
 Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver();
+
+TinyGPS gps; // create gps object
 
 // RF24
 const byte slaveAddress[6] = "00001"; // Sets the address for communitating with the controller(must be the same in the controller)
@@ -38,8 +41,8 @@ RF24 radio(7, 8);                     // CE Pin, CSN Pin
 // Structure with the received information
 struct RECEIVE_DATA_STRUCTURE
 {
-  int velocity;
-  int steer;
+  int velocity=90;
+  int steer=90;
   int light;
   int slow;
   int alone;
@@ -72,6 +75,7 @@ long time4 = 0;         // Timer for counting how long the car lost communicatio
 int mode = 0;           // Defines if its in automatic mode or manual mode (0-manual, 1-automatic)
 int motor_pulselength;  // Declares the variable that be used to map the value from degrees to microseconds pwm wave for motor
 int servo_pulselength;  // Declares the variable that be used to map the value from degrees to microseconds pwm wave for servo
+float lat,lon;
 int chanell;
 
 void setup()
@@ -79,7 +83,7 @@ void setup()
   // Serial communication
   Serial.begin(Baud); // Initializes Serial communication with the computer for debugging
 
-  // HCPCA9685
+  // Adafruit PWMServoDriver
   pwm.begin();                                                 // Initializes the PWM driver
   pwm.setOscillatorFrequency(27000000);                        // Value that needs to be adjusted to have a perfect 50hz (need an oscilloscope to check this)
   pwm.setPWMFreq(50);                                          // Sets the frequency of the servos which tipically is 50
@@ -107,6 +111,9 @@ void setup()
   radio.openReadingPipe(0, slaveAddress); // Opens a pipe to communicate(must be the same as the controller) with the controller
   radio.startListening();                 // Sets the RF24 driver to listening for new information
   chanell = radio.getChannel();
+  
+  //GPS
+  Serial1.begin(9600); // connect gps sensor
 
   // Arduino setup Check
   printf("Arduino Initialized"); // Checks if the arduino setups correctly
@@ -114,6 +121,27 @@ void setup()
 
 void loop()
 {
+  while(Serial1.available()){ // check for gps data
+    if(gps.encode(Serial1.read()))// encode gps data
+    { 
+    gps.f_get_position(&lat,&lon); // get latitude and longitude
+
+    Serial.print("Position: ");
+    
+    //Latitude
+    Serial.print("Latitude: ");
+    Serial.print(lat,6);
+    
+    Serial.print(",");
+    
+    //Longitude
+    Serial.print("Longitude: ");
+    Serial.println(lon,6); 
+    
+   }
+  }
+ 
+
   // Checks if the arduino is still receiving information through radio waves, if not centers the wheels and puts it in neutral
   if ((time1 - previoustime1) >= 20)
   {
@@ -127,19 +155,7 @@ void loop()
     radio.powerDown();
     radio.setChannel(chanell);
     delay(20);
-  }
-
-if (time4>=250)
-{
-  previoustime1 = time1;
-  radio.powerUp();
-  radio.openReadingPipe(0, slaveAddress); // Opens a pipe to communicate(must be the same as the controller) with the controller
-  radio.startListening();  
-
-  
-
-}
-
+  }  
   else
   {
     // Nrf24
@@ -147,8 +163,18 @@ if (time4>=250)
     {                                      // Looking for the data.
       radio.read(&mydata, sizeof(mydata)); // Reading the data
       previoustime1 = time1;               // Reset the time variable
+      time4=0;
     }
   }
+
+  if (time4 >= 250)
+  {
+    previoustime1 = time1;
+    radio.powerUp();
+    radio.openReadingPipe(0, slaveAddress); // Opens a pipe to communicate(must be the same as the controller) with the controller
+    radio.startListening();
+  }
+
   // Checks the received information is within accepted values and then sends it to the servo driver
   if (mydata.steer < center - steervalue || mydata.steer > center + steervalue || mydata.velocity > 90 + mydata.vmais || mydata.velocity < 90 - mydata.vmais)
   {
