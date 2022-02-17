@@ -76,7 +76,7 @@ void setup()
 
   // SPI
   SPI.setClockDivider(100000);
-  SPI.setDataMode(SPI_MODE0); // tentar ate ao modulo 0 1 2 3
+  SPI.setDataMode(SPI_MODE0); // try mode 0 1 2 3
 
   // RF24
   if (!radio.begin())
