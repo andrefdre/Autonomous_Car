@@ -144,11 +144,11 @@ void loop()
 
   // Prints the information to the serial for debuging
 
-  printf("\nSteer: %d" , mydata.steer);
-  printf("  Velocity: %d" , mydata.velocity);
-  printf("  Light: %d" , mydata.light);
-  printf("  Break: %d" , mydata.slow);
-  printf("  Mode: %d" , mydata.alone);
+  printf("\nSteer: %d" , send_data.steer);
+  printf("  Velocity: %d" , send_data.velocity);
+  printf("  Light: %d" , send_data.light);
+  printf("  Break: %d" , send_data.slow);
+  printf("  Mode: %d" , send_data.alone);
   printf("  Acknowledge: %d" , rslt);
   printf("  Chanell: %d" , radio.getChannel());
   printf(" Latitude: %d", receive_data.lati);

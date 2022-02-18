@@ -158,8 +158,8 @@ void loop()
     pwm.writeMicroseconds(motorPin, motor_pulselength);          // Writes to the motor to neutral position
     servo_pulselength = map(center, 0, 270, SERVOMIN, SERVOMAX); // Maps the the angle value to PWM microseconds
     pwm.writeMicroseconds(servoPin, servo_pulselength);          // Writes for the servo to center the wheels
-    mydata.steer = center;                                       // Resets the variables to safe values
-    mydata.velocity = 90;                                        // Resets the variables to safe values
+    receive_data.steer = center;                                       // Resets the variables to safe values
+    receive_data.velocity = 90;                                        // Resets the variables to safe values
     time4++;                                                     // Increase timmer that is used to check how long the communication was lost
     radio.powerDown();                                           // Turns the radio module off
     radio.setChannel(chanell);                                   // Sets the channel that was being used previously
@@ -256,9 +256,9 @@ void loop()
   time3++;
 
   // Writes to Serial for debbuging
-  printf("\nSteer: %d", mydata.steer);
+  printf("\nSteer: %d", receive_data.steer);
   printf("  Steer pulse: %d", servo_pulselength);
-  printf("  Velocity:  %d", mydata.velocity);
+  printf("  Velocity:  %d", receive_data.velocity);
   printf("  Motor pulse:  %d", motor_pulselength);
   printf("  Diferença: %d", time1 - previoustime1);
   printf("  Modo: %d", mode);
