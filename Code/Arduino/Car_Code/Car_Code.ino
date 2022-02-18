@@ -37,7 +37,7 @@ Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver(); // Creates the servo dr
 TinyGPS gps; // Create gps object
 
 // RF24
-const byte slaveAddress[6] = "00001"; // Sets the address for communitating with the controller(must be the same in the controller)
+const byte Address [][6] = {"00001" , "00002"}; // Sets the address for communitating with the controller(must be the same in the controller)
 RF24 radio(7, 8);                     // CE Pin, CSN Pin
 
 // Structure with the received information
@@ -50,7 +50,15 @@ struct RECEIVE_DATA_STRUCTURE
   int alone;
   int vmais;
 };
-RECEIVE_DATA_STRUCTURE mydata; // Atributes a easier name to be used in the structure
+RECEIVE_DATA_STRUCTURE receive_data; // Atributes a easier name to be used in the structure
+
+// Structure with the information to be sent back
+struct SEND_DATA_STRUCTURE
+{
+  int lati=1000;
+  int longi=1000;
+};
+SEND_DATA_STRUCTURE send_data; // Atributes a easier name to be used in the structure
 
 // General variables
 #define Baud 115200   // Sets the communication baudRate with the computer
@@ -114,7 +122,8 @@ void setup()
     {
     } // hold in infinite loop
   }
-  radio.openReadingPipe(0, slaveAddress); // Opens a pipe to communicate(must be the same as the controller) with the controller
+  radio.openReadingPipe(0, Address[0]); // Opens a pipe to communicate(must be the same as the controller) with the controller
+  radio.openWritingPipe(Address[1]);
   radio.startListening();                 // Sets the RF24 driver to listening for new information
   chanell = radio.getChannel();           // Stores the channel to attribute it later 
   
@@ -143,12 +152,14 @@ void loop()
     //Latitude
     Serial.print("Latitude: ");
     Serial.print(lat,6);
+    send_data.lati=lat;
     
     Serial.print(",");
     
     //Longitude
     Serial.print("Longitude: ");
     Serial.println(lon,6); 
+    send_data.longi=lon;
     
    }
   }
@@ -161,8 +172,8 @@ void loop()
     pwm.writeMicroseconds(motorPin, motor_pulselength);          // Writes to the motor to neutral position
     servo_pulselength = map(center, 0, 270, SERVOMIN, SERVOMAX); // Maps the the angle value to PWM microseconds
     pwm.writeMicroseconds(servoPin, servo_pulselength);          // Writes for the servo to center the wheels
-    mydata.steer = center; // Resets the variables to safe values
-    mydata.velocity = 90;         // Resets the variables to safe values
+    receive_data.steer = center; // Resets the variables to safe values
+    receive_data.velocity = 90;         // Resets the variables to safe values
     time4++;                           // Increase timmer that is used to check how long the communication was lost
     radio.powerDown();                                         // Turns the radio module off
     radio.setChannel(chanell);                                 // Sets the channel that was being used previously
@@ -173,25 +184,26 @@ void loop()
     // Nrf24
     if (radio.available())
     {                                      // Looking for the data.
-      radio.read(&mydata, sizeof(mydata)); // Reading the data
+      radio.read(&receive_data, sizeof(receive_data)); // Reading the data
       previoustime1 = time1;               // Reset the time variable
       time4=0;
     }
   }
 
+  radio.stopListening();
 
 // Checks how long and if the communication was lost to restore it 
   if (time4 >= 250)
   {
     previoustime1 = time1;   // Resets the variable to let it communicate again 
     radio.powerUp();     // Turns the radio module on
-    radio.openReadingPipe(0, slaveAddress); // Opens a pipe to communicate(must be the same as the controller) with the controller
+    radio.openReadingPipe(0, Address[0]); // Opens a pipe to communicate(must be the same as the controller) with the controller
     radio.startListening();  // Sets the radio to listen 
   } 
 
 
   // Checks the received information is within accepted values and then sends it to the servo driver
-  if (mydata.steer < center - steervalue || mydata.steer > center + steervalue || mydata.velocity > 90 + mydata.vmais || mydata.velocity < 90 - mydata.vmais)
+  if (receive_data.steer < center - steervalue || receive_data.steer > center + steervalue || receive_data.velocity > 90 + receive_data.vmais || receive_data.velocity < 90 - receive_data.vmais)
   {
     motor_pulselength = map(90, 0, 180, MOTORMiN, MOTORMAX);     // Maps the the angle value to PWM microseconds
     pwm.writeMicroseconds(motorPin, motor_pulselength);          // Writes to the motor to neutral position
@@ -200,9 +212,9 @@ void loop()
   }
   else
   {
-    motor_pulselength = map(mydata.velocity, 0, 180, MOTORMiN, MOTORMAX); // Maps the the angle value to PWM microseconds
+    motor_pulselength = map(receive_data.velocity, 0, 180, MOTORMiN, MOTORMAX); // Maps the the angle value to PWM microseconds
     pwm.writeMicroseconds(motorPin, motor_pulselength);                   // Writes the mapped value to change the motor speed
-    servo_pulselength = map(mydata.steer, 0, 270, SERVOMIN, SERVOMAX);    // Maps the the angle value to PWM microseconds
+    servo_pulselength = map(receive_data.steer, 0, 270, SERVOMIN, SERVOMAX);    // Maps the the angle value to PWM microseconds
     pwm.writeMicroseconds(servoPin, servo_pulselength);                   // Writes the mapped value to steer the wheels
   }
 
@@ -211,7 +223,7 @@ void loop()
   // Changes the light output
   if (time3 - previoustime >= 10)
   {
-    if (mydata.light == 1)
+    if (receive_data.light == 1)
     {
       switch (light1)
       {
@@ -232,7 +244,7 @@ void loop()
   // Changes the mode variable
   if (time2 - previoustime2 >= 10)
   {
-    if (mydata.alone == 1)
+    if (receive_data.alone == 1)
     {
       switch (mode)
       {
@@ -248,6 +260,10 @@ void loop()
     }
   }
 
+  // NRF24 sends the information to the controller
+  rslt = radio.write(&send_data, sizeof(send_data)); // Writes the information to the car and puts the result in "reslt" variable
+  radio.startListening();                 // Sets the RF24 driver to listening for new information
+
 
   // Increments the time variables to check in the future if the respective variables can be changed
   time1++;
@@ -257,11 +273,11 @@ void loop()
 
   // Writes to Serial for debbuging
   Serial.print("\nSteer:  ");
-  Serial.print(mydata.steer);
+  Serial.print(receive_data.steer);
   Serial.print("  Steer pulse: ");
   Serial.print(servo_pulselength);
   Serial.print("  Velocity:  ");
-  Serial.print(mydata.velocity);
+  Serial.print(receive_data.velocity);
   Serial.print("  Motor pulse:  ");
   Serial.print(motor_pulselength);
   Serial.print("  Diferença: ");
@@ -270,6 +286,8 @@ void loop()
   Serial.print(mode);
   Serial.print("  Chanell: ");
   Serial.print(radio.getChannel());
+  printf(" Latitude: %d" , send_data.lati);
+  printf(" Longitude: %d" , send_data.longi);
 
   delay(10);
 }
