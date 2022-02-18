@@ -1,4 +1,5 @@
 /*
+
   Autonomous Car
 
   This is the code for the controller. It is what establishes the interactions with the user, using joysticks and button it reads the inputs the user gives
@@ -39,8 +40,8 @@ RECEIVE_DATA_STRUCTURE mydata; // Atributes a easier name for the structure
 #define BaudRate 115200 // Defines the baudRate for the communition with serial
 #define CE_PIN 7        // Defines the CE Pin
 #define CSN_PIN 8       // Defines the CSN Pin
-#define center 90      // Defines the center of the neutral in the motor
-#define centerw 90     // Defines the center of the wheels
+#define center 90       // Defines the center of the neutral in the motor
+#define centerw 90      // Defines the center of the wheels
 #define steervalue 22   // Defines the amount the wheels will turn
 #define velocity_pin A0 // Defines velocity pin
 #define steer_pin A2    // Defines steer pin
@@ -81,7 +82,7 @@ void setup()
   // RF24
   if (!radio.begin())
   {
-    Serial.println(F("radio hardware is not responding!!"));
+    printf("radio hardware is not responding!!");
     while (1)
     {
     } // hold in infinite loop
@@ -126,20 +127,13 @@ void loop()
   }
 
   // Prints the information to the serial for debuging
-  Serial.print("\nSteer:");
-  Serial.print(mydata.steer);
-  Serial.print("  Velocity:");
-  Serial.print(mydata.velocity);
-  Serial.print("  Light:");
-  Serial.print(mydata.light);
-  Serial.print("  Break:");
-  Serial.print(mydata.slow);
-  Serial.print("  Mode:");
-  Serial.print(mydata.alone);
-  Serial.print("  Acknowledge:");
-  Serial.print(rslt);
-  Serial.print("  Chanell: ");
-  Serial.print(radio.getChannel());
+  printf("\nSteer: %d" , mydata.steer);
+  printf("  Velocity: %d" , mydata.velocity);
+  printf("  Light: %d" , mydata.light);
+  printf("  Break: %d" , mydata.slow);
+  printf("  Mode: %d" , mydata.alone);
+  printf("  Acknowledge: %d" , rslt);
+  printf("  Chanell: %d" , radio.getChannel());
 
   delay(10);
 }
