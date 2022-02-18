@@ -1,4 +1,5 @@
 /*
+
   Autonomous Car
 
   This is the code for the controller. It is what establishes the interactions with the user, using joysticks and button it reads the inputs the user gives
@@ -89,7 +90,7 @@ void setup()
   // RF24
   if (!radio.begin())
   {
-    Serial.println(F("radio hardware is not responding!!"));
+    printf("radio hardware is not responding!!");
     while (1)
     {
     } // hold in infinite loop
@@ -142,20 +143,14 @@ void loop()
   }
 
   // Prints the information to the serial for debuging
-  Serial.print("\nSteer:");
-  Serial.print(send_data.steer);
-  Serial.print("  Velocity:");
-  Serial.print(send_data.velocity);
-  Serial.print("  Light:");
-  Serial.print(send_data.light);
-  Serial.print("  Break:");
-  Serial.print(send_data.slow);
-  Serial.print("  Mode:");
-  Serial.print(send_data.alone);
-  Serial.print("  Acknowledge:");
-  Serial.print(rslt);
-  Serial.print("  Chanell: ");
-  Serial.print(radio.getChannel());
+
+  printf("\nSteer: %d" , mydata.steer);
+  printf("  Velocity: %d" , mydata.velocity);
+  printf("  Light: %d" , mydata.light);
+  printf("  Break: %d" , mydata.slow);
+  printf("  Mode: %d" , mydata.alone);
+  printf("  Acknowledge: %d" , rslt);
+  printf("  Chanell: %d" , radio.getChannel());
   printf(" Latitude: %d", receive_data.lati);
   printf(" Longitude: %d", receive_data.longi);
 

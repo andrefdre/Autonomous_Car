@@ -1,7 +1,12 @@
 {
     "C_Cpp.errorSquiggles": "Disabled",
     "cSpell.words": [
-        "Lipo"
+        "centerw",
+        "countup",
+        "Lipo",
+        "reslt",
+        "vdown",
+        "vmais"
     ],
     "cSpell.enableFiletypes": [
         "arduino",
