@@ -25,7 +25,7 @@
 #include <RF24.h>      //Includes the library for the communication with radio waves
 
 // Structure with the information to be sent
-struct RECEIVE_DATA_STRUCTURE
+struct SEND_DATA_STRUCTURE
 {
   int velocity;
   int steer;
@@ -34,7 +34,15 @@ struct RECEIVE_DATA_STRUCTURE
   int alone;
   int vmais = 30;
 };
-RECEIVE_DATA_STRUCTURE mydata; // Atributes a easier name for the structure
+SEND_DATA_STRUCTURE send_data; // Atributes a easier name for the structure
+
+// Structure with the information received
+struct RECEIVE_DATA_STRUCTURE
+{
+  int lati = 0;
+  int longi = 0;
+};
+RECEIVE_DATA_STRUCTURE receive_data; // Atributes a easier name to be used in the structure
 
 // General variables
 #define BaudRate 115200 // Defines the baudRate for the communition with serial
@@ -59,8 +67,8 @@ int countdown = 0; // Timing to only register if the button was pressed after a 
 bool rslt;         // Stores the result of the communication, if it was successful or not
 
 // RF24
-RF24 radio(CE_PIN, CSN_PIN);          // Create a Radio
-const byte slaveAddress[6] = "00001"; // Defines the address for the radio communication
+RF24 radio(CE_PIN, CSN_PIN);                  // Create a Radio
+const byte Address[][6] = {"00001", "00002"}; // Defines the address for the radio communication
 
 void setup()
 {
@@ -87,7 +95,8 @@ void setup()
     {
     } // hold in infinite loop
   }
-  radio.openWritingPipe(slaveAddress); // Opens a pipe to communicate(must be the same as the car) with the car
+  radio.openWritingPipe(Address[0]);    // Opens a pipe to communicate(must be the same as the car) with the car
+  radio.openReadingPipe(0, Address[1]); // Opens a pipe to communicate(must be the same as the car) with the car
 
   // Arduino setup Check
   printf("Arduino Initialized"); // Checks if the arduino setups correctly
@@ -99,34 +108,42 @@ void loop()
   countdown++; // Increases the counter so it can after actuate in the respective variable or not
 
   // Acquire information from the pins
-  mydata.slow = digitalRead(slow_pin);        // Break
-  mydata.light = digitalRead(light_pin);      // Light
-  mydata.alone = !digitalRead(mode_pin);      // Mode
-  vup = digitalRead(vup_pin);                 // Vup
-  vdown = digitalRead(vdown_pin);             // Vdown
-  mydata.velocity = analogRead(velocity_pin); // Velocity
-  mydata.steer = analogRead(steer_pin);       // Steer
+  send_data.slow = digitalRead(slow_pin);        // Break
+  send_data.light = digitalRead(light_pin);      // Light
+  send_data.alone = !digitalRead(mode_pin);      // Mode
+  vup = digitalRead(vup_pin);                    // Vup
+  vdown = digitalRead(vdown_pin);                // Vdown
+  send_data.velocity = analogRead(velocity_pin); // Velocity
+  send_data.steer = analogRead(steer_pin);       // Steer
 
   // Maps the variables so it takes the joystick value and makes it compatible to use in the servo driver
-  mydata.velocity = map(mydata.velocity, 0, 1023, center + mydata.vmais, center - mydata.vmais);
-  mydata.steer = map(mydata.steer, 0, 1023, centerw + steervalue, centerw - steervalue);
+  send_data.velocity = map(send_data.velocity, 0, 1023, center + send_data.vmais, center - send_data.vmais);
+  send_data.steer = map(send_data.steer, 0, 1023, centerw + steervalue, centerw - steervalue);
 
   // RF24
-  rslt = radio.write(&mydata, sizeof(mydata)); // Writes the information to the car and puts the result in "reslt" variable
+  rslt = radio.write(&send_data, sizeof(send_data)); // Writes the information to the car and puts the result in "reslt" variable
+  radio.startListening();                            // Enables the listening pipe to read information from the car
 
   // Checks if the buttons where pressed if they were they increase or decrease the max velocity accordingly
   if (vup == 1 && countup > 5)
   {
     countup = 0;
-    mydata.vmais++;
+    send_data.vmais++;
   }
   if (vdown == 1 && countdown > 5)
   {
     countdown = 0;
-    mydata.vmais--;
+    send_data.vmais--;
+  }
+
+  if (radio.available())
+  {                                                  // Looking for the data.
+    radio.read(&receive_data, sizeof(receive_data)); // Reading the data
+    radio.stopListening();                           // Disables reading to let it send the information to the car
   }
 
   // Prints the information to the serial for debuging
+
   printf("\nSteer: %d" , mydata.steer);
   printf("  Velocity: %d" , mydata.velocity);
   printf("  Light: %d" , mydata.light);
@@ -134,6 +151,8 @@ void loop()
   printf("  Mode: %d" , mydata.alone);
   printf("  Acknowledge: %d" , rslt);
   printf("  Chanell: %d" , radio.getChannel());
+  printf(" Latitude: %d", receive_data.lati);
+  printf(" Longitude: %d", receive_data.longi);
 
   delay(10);
 }
