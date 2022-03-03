@@ -158,8 +158,8 @@ void loop()
     pwm.writeMicroseconds(motorPin, motor_pulselength);          // Writes to the motor to neutral position
     servo_pulselength = map(center, 0, 270, SERVOMIN, SERVOMAX); // Maps the the angle value to PWM microseconds
     pwm.writeMicroseconds(servoPin, servo_pulselength);          // Writes for the servo to center the wheels
-    receive_data.steer = center;                                       // Resets the variables to safe values
-    receive_data.velocity = 90;                                        // Resets the variables to safe values
+    receive_data.steer = center;                                 // Resets the variables to safe values
+    receive_data.velocity = 90;                                  // Resets the variables to safe values
     time4++;                                                     // Increase timmer that is used to check how long the communication was lost
     radio.powerDown();                                           // Turns the radio module off
     radio.setChannel(chanell);                                   // Sets the channel that was being used previously
@@ -185,7 +185,6 @@ void loop()
     radio.powerUp();                      // Turns the radio module on
     radio.openReadingPipe(0, Address[0]); // Opens a pipe to communicate(must be the same as the controller) with the controller
     radio.startListening();               // Sets the radio to listen
-
   }
 
   // Checks the received information is within accepted values and then sends it to the servo driver
@@ -248,7 +247,6 @@ void loop()
   // NRF24 sends the information to the controller
   rslt = radio.write(&send_data, sizeof(send_data)); // Writes the information to the car and puts the result in "rslt" variable
   radio.startListening();                            // Sets the RF24 driver to listening for new information
-
 
   // Increments the time variables to check in the future if the respective variables can be changed
   time1++;

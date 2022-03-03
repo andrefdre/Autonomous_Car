@@ -100,6 +100,7 @@ void setup()
 
   // Arduino setup Check
   printf("Arduino Initialized"); // Checks if the arduino setups correctly
+  delay(10);
 }
 
 void loop()
@@ -111,10 +112,10 @@ void loop()
   send_data.slow = digitalRead(slow_pin);        // Break
   send_data.light = digitalRead(light_pin);      // Light
   send_data.alone = !digitalRead(mode_pin);      // Mode
-  vup = digitalRead(vup_pin);                    // Vup
-  vdown = digitalRead(vdown_pin);                // Vdown
   send_data.velocity = analogRead(velocity_pin); // Velocity
   send_data.steer = analogRead(steer_pin);       // Steer
+  vup = digitalRead(vup_pin);                    // Vup
+  vdown = digitalRead(vdown_pin);                // Vdown
 
   // Maps the variables so it takes the joystick value and makes it compatible to use in the servo driver
   send_data.velocity = map(send_data.velocity, 0, 1023, center + send_data.vmais, center - send_data.vmais);
@@ -144,13 +145,13 @@ void loop()
 
   // Prints the information to the serial for debuging
 
-  printf("\nSteer: %d" , send_data.steer);
-  printf("  Velocity: %d" , send_data.velocity);
-  printf("  Light: %d" , send_data.light);
-  printf("  Break: %d" , send_data.slow);
-  printf("  Mode: %d" , send_data.alone);
-  printf("  Acknowledge: %d" , rslt);
-  printf("  Chanell: %d" , radio.getChannel());
+  printf("\nSteer: %d", send_data.steer);
+  printf("  Velocity: %d", send_data.velocity);
+  printf("  Light: %d", send_data.light);
+  printf("  Break: %d", send_data.slow);
+  printf("  Mode: %d", send_data.alone);
+  printf("  Acknowledge: %d", rslt);
+  printf("  Chanell: %d", radio.getChannel());
   printf(" Latitude: %d", receive_data.lati);
   printf(" Longitude: %d", receive_data.longi);
 
