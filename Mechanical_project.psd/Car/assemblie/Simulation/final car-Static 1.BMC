@@ -1,6 +1,0 @@
-SOLVER TYPE= Direct Sparse Solver
-Number of Equations (NEQ)=359073
-Number of Nodal points (NUMNP)=121659
-Number of Pseudo nodes (NUMPS)=23
-Number of Elements (NUME)=71703
-Number of Pseudo Elements (NUMP)=6865
